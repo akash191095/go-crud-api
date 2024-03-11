@@ -1,4 +1,4 @@
-module go-crud-api
+module akash191095/go-crud-api
 
 go 1.22.1
 
