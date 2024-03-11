@@ -12,5 +12,6 @@ func main() {
 	models.ConnectDatabase()
 
 	router.POST("/posts", controllers.CreatePost)
+	router.GET("/posts", controllers.FindPosts)
 	router.Run()
 }

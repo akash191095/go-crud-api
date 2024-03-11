@@ -22,3 +22,9 @@ func CreatePost(c *gin.Context) {
 	models.DB.Create(&post)
 	c.JSON(http.StatusOK, gin.H{"data": post})
 }
+
+func FindPosts(c *gin.Context) {
+	var posts []models.Post
+	models.DB.Find(&posts);
+	c.JSON(http.StatusOK, gin.H{"data": posts})
+}
