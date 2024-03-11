@@ -12,6 +12,11 @@ type CreatePostInput struct {
 	Content string `json:"content" binding:"required"`
 }
 
+type UpdatePostInput struct {
+    Title   string `json:"title"`
+    Content string `json:"content"`
+}
+
 func CreatePost(c *gin.Context) {
 	var input CreatePostInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -37,4 +42,24 @@ func FindPost(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": post})
+}
+
+func UpdatePost(c *gin.Context) {
+    var post models.Post
+    if err := models.DB.Where("id = ?", c.Param("id")).First(&post).Error; err != nil {
+        c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "record not found"})
+        return
+    }
+
+    var input UpdatePostInput
+
+    if err := c.ShouldBindJSON(&input); err != nil {
+        c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    updatedPost := models.Post{Title: input.Title, Content: input.Content}
+
+    models.DB.Model(&post).Updates(&updatedPost)
+    c.JSON(http.StatusOK, gin.H{"data": post})
 }
